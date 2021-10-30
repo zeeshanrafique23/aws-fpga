@@ -73,6 +73,11 @@ module cl_axil_to_axi(
   output logic        s_axi_rready
 );
 
+  logic        un_used_bid;
+  logic [31:0] un_used_rdata;
+  logic        un_used_rid;
+  logic        un_used_rlast;
+
   always_comb begin
     if (!rsta_busy || !rstb_busy) begin
       // Write address
@@ -92,7 +97,7 @@ module cl_axil_to_axi(
       m_bar1_sh_wready  = s_axi_wready;
 
       // Write response
-      wire un_used_bid  = &{1'b0, s_axi_bid};
+      un_used_bid       = &{1'b0, s_axi_bid};
       m_bar1_sh_bvalid  = s_axi_bvalid;
       m_bar1_sh_bresp   = s_axi_bresp;
       s_axi_bready      = m_sh_bar1_bready;
@@ -107,11 +112,10 @@ module cl_axil_to_axi(
       m_bar1_sh_arready = s_axi_arready;
 
       // Read data/response
-      wire [31:0] un_used_rdata;
-      wire un_used_rid                 = &{1'b0, s_axi_rid};
+      un_used_rid                      = &{1'b0, s_axi_rid};
       {un_used_rdata, m_bar1_sh_rdata} = s_axi_rdata;
       m_bar1_sh_rresp                  = s_axi_rresp;
-      wire un_used_rlast               = s_axi_rlast;
+      un_used_rlast                    = s_axi_rlast;
       s_axi_rready                     = m_sh_bar1_rready;
       m_sh_bar1_rready                 = s_axi_rready;
     end

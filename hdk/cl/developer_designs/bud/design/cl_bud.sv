@@ -199,7 +199,7 @@ sh_ddr #(.DDR_A_PRESENT(0),
    .sh_ddr_stat_wdata0  (tie_zero_stat_data),
    .ddr_sh_stat_ack0    (),
    .ddr_sh_stat_rdata0  (),
-   .ddr_sh_stat_int0    ()
+   .ddr_sh_stat_int0    (),
 
    .sh_ddr_stat_addr1  (tie_zero_stat_addr) ,
    .sh_ddr_stat_wr1    (3'b0) , 
@@ -472,8 +472,8 @@ sh_ddr #(.DDR_A_PRESENT(0),
      .rsta_busy         ( rsta_busy       ),
      .rstb_busy         ( rstb_busy       ),
    
-     .s_aclk            ( clk_main_a0     ),
-     .s_aresetn         ( rst_main_n      ),
+     .s_aclk            ( clk             ),
+     .s_aresetn         ( sync_rst_n      ),
    
      // Write address
      .s_axi_awid        ( s_axi_awid      ), 
