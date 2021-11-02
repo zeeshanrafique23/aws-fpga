@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // Testbench to verify bud design
 
 module cl_bud_tb;
@@ -23,7 +24,7 @@ module cl_bud_tb;
   logic        sh_bar1_bready;
                                                                                                                               
   // Read address                                                                                                              
-               sh_bar1_arvalid;
+  logic        sh_bar1_arvalid;
   logic [31:0] sh_bar1_araddr;
   logic        bar1_sh_arready;
                                                                                                                               
@@ -217,7 +218,7 @@ module cl_bud_tb;
     // Read data/response                                                                                                                         
     sh_bar1_rready  = 0;
 
-    #4;
+    #6;
     sync_rst_n = 1;
 
     /* First transaction (Write)*/
@@ -235,7 +236,7 @@ module cl_bud_tb;
     sh_bar1_araddr   = 32'h00000010;
     sh_bar1_arvalid  = 1'b1;
 
-    m_sh_bar1_rready = 1'b1;
+    sh_bar1_rready = 1'b1;
   end
 
   always #2 clk <= ~clk;
