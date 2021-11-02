@@ -32,14 +32,14 @@ module cl_bud #(parameter NUM_PCIE=1, parameter NUM_DDR=4, parameter NUM_HMC=4, 
    // to avoid cases where developer may forget to
    // remove it from the end of the file
 
-   `include "unused_flr_template.inc"
-   `include "unused_ddr_a_b_d_template.inc"
-   `include "unused_ddr_c_template.inc"
-   `include "unused_pcim_template.inc"
-   `include "unused_dma_pcis_template.inc"
-   `include "unused_cl_sda_template.inc"
-   `include "unused_apppf_irq_template.inc"
-   `include "unused_sh_ocl_template.inc"
+   // `include "unused_flr_template.inc"
+   // `include "unused_ddr_a_b_d_template.inc"
+   // `include "unused_ddr_c_template.inc"
+   // `include "unused_pcim_template.inc"
+   // `include "unused_dma_pcis_template.inc"
+   // `include "unused_cl_sda_template.inc"
+   // `include "unused_apppf_irq_template.inc"
+   // `include "unused_sh_ocl_template.inc"
 
    localparam NUM_CFG_STGS_INT_TST = 4;
    localparam NUM_CFG_STGS_HMC_ATG = 4;
@@ -77,7 +77,7 @@ always_ff @(negedge rst_main_n or posedge clk)
       pre_sync_rst_n <= 1;
       sync_rst_n <= pre_sync_rst_n;
    end
-
+/*
 //----------------------------------------- 
 // DDR controller instantiation   
 //----------------------------------------- 
@@ -348,52 +348,145 @@ sh_ddr #(.DDR_A_PRESENT(0),
    assign aurora_sh_stat_ack   =  1'b0;
    assign aurora_sh_stat_rdata = 32'b0;
    assign aurora_sh_stat_int   =  8'b0;
-
+*/
 //------------------------------------
 // CL BUD logic
 //------------------------------------
+   // Write address
+   logic [ 3:0] m0_axi_awid;
+   logic [31:0] m0_axi_awaddr;
+   logic [ 7:0] m0_axi_awlen;
+   logic [ 2:0] m0_axi_awsize;
+   logic [ 1:0] m0_axi_awburst;
+   logic        m0_axi_awvalid;
+   logic        m0_axi_awready;
+ 
+   // Write data
+   logic [63:0] m0_axi_wdata;
+   logic [ 7:0] m0_axi_wstrb;
+   logic        m0_axi_wlast; 
+   logic        m0_axi_wvalid;
+   logic        m0_axi_wready;
+ 
+   // Write response
+   logic [ 3:0] m0_axi_bid;
+   logic [ 1:0] m0_axi_bresp;
+   logic        m0_axi_bvalid;
+   logic        m0_axi_bready;
+ 
+   // Read address
+   logic [ 3:0] m0_axi_arid;
+   logic [31:0] m0_axi_araddr;
+   logic [ 7:0] m0_axi_arlen;
+   logic [ 2:0] m0_axi_arsize;
+   logic [ 1:0] m0_axi_arburst;
+   logic        m0_axi_arvalid;
+   logic        m0_axi_arready;
+ 
+   // Read data/response
+   logic [ 3:0] m0_axi_rid;
+   logic [63:0] m0_axi_rdata;
+   logic [ 1:0] m0_axi_rresp;
+   logic        m0_axi_rlast;
+   logic        m0_axi_rvalid;
+   logic        m0_axi_rready;
 
+   /* Memory signals */
    logic        rsta_busy;
    logic        rstb_busy;
 
-    // Write address
-   logic [ 3:0] s_axi_awid;
-   logic [31:0] s_axi_awaddr;
-   logic [ 7:0] s_axi_awlen;
-   logic [ 2:0] s_axi_awsize;
-   logic [ 1:0] s_axi_awburst;
-   logic        s_axi_awvalid;
-   logic        s_axi_awready;
+   // Write address
+   logic [ 3:0] s0_axi_awid;
+   logic [31:0] s0_axi_awaddr;
+   logic [ 7:0] s0_axi_awlen;
+   logic [ 2:0] s0_axi_awsize;
+   logic [ 1:0] s0_axi_awburst;
+   logic        s0_axi_awvalid;
+   logic        s0_axi_awready;
  
    // Write data
-   logic [63:0] s_axi_wdata;
-   logic [ 7:0] s_axi_wstrb;
-   logic        s_axi_wlast; 
-   logic        s_axi_wvalid;
-   logic        s_axi_wready;
+   logic [63:0] s0_axi_wdata;
+   logic [ 7:0] s0_axi_wstrb;
+   logic        s0_axi_wlast; 
+   logic        s0_axi_wvalid;
+   logic        s0_axi_wready;
  
    // Write response
-   logic [ 3:0] s_axi_bid;
-   logic [ 1:0] s_axi_bresp;
-   logic        s_axi_bvalid;
-   logic        s_axi_bready;
+   logic [ 3:0] s0_axi_bid;
+   logic [ 1:0] s0_axi_bresp;
+   logic        s0_axi_bvalid;
+   logic        s0_axi_bready;
  
    // Read address
-   logic [ 3:0] s_axi_arid;
-   logic [31:0] s_axi_araddr;
-   logic [ 7:0] s_axi_arlen;
-   logic [ 2:0] s_axi_arsize;
-   logic [ 1:0] s_axi_arburst;
-   logic        s_axi_arvalid;
-   logic        s_axi_arready;
+   logic [ 3:0] s0_axi_arid;
+   logic [31:0] s0_axi_araddr;
+   logic [ 7:0] s0_axi_arlen;
+   logic [ 2:0] s0_axi_arsize;
+   logic [ 1:0] s0_axi_arburst;
+   logic        s0_axi_arvalid;
+   logic        s0_axi_arready;
  
    // Read data/response
-   logic [ 3:0] s_axi_rid;
-   logic [63:0] s_axi_rdata;
-   logic [ 1:0] s_axi_rresp;
-   logic        s_axi_rlast;
-   logic        s_axi_rvalid;
-   logic        s_axi_rready;
+   logic [ 3:0] s0_axi_rid;
+   logic [63:0] s0_axi_rdata;
+   logic [ 1:0] s0_axi_rresp;
+   logic        s0_axi_rlast;
+   logic        s0_axi_rvalid;
+   logic        s0_axi_rready;
+
+   // Master 1 //
+   logic [31:0] m1_axi_awaddr;
+   logic [ 7:0] m1_axi_awlen;
+   logic [ 2:0] m1_axi_awsize;
+   logic [ 1:0] m1_axi_awburst;
+   logic        m1_axi_awvalid;
+   logic        m1_axi_awready;
+   logic [63:0] m1_axi_wdata;
+   logic [ 7:0] m1_axi_wstrb;
+   logic        m1_axi_wlast;
+   logic        m1_axi_wvalid;
+   logic        m1_axi_wready;
+   logic [ 1:0] m1_axi_bresp;
+   logic        m1_axi_bvalid;
+   logic        m1_axi_bready;
+   logic [31:0] m1_axi_araddr;
+   logic [ 7:0] m1_axi_arlen;
+   logic [ 2:0] m1_axi_arsize;
+   logic [ 1:0] m1_axi_arburst;
+   logic        m1_axi_arvalid;
+   logic        m1_axi_arready;
+   logic [63:0] m1_axi_rdata;
+   logic [1:0]  m1_axi_rresp;
+   logic        m1_axi_rlast;
+   logic        m1_axi_rvalid;
+   logic        m1_axi_rready;
+
+   // Slave 1 //
+   logic [31:0] s1_axi_awaddr;
+   logic [ 7:0] s1_axi_awlen;
+   logic [ 2:0] s1_axi_awsize;
+   logic [ 1:0] s1_axi_awburst;
+   logic        s1_axi_awvalid;
+   logic        s1_axi_awready;
+   logic [63:0] s1_axi_wdata;
+   logic [ 7:0] s1_axi_wstrb;
+   logic        s1_axi_wlast;
+   logic        s1_axi_wvalid;
+   logic        s1_axi_wready;
+   logic [ 1:0] s1_axi_bresp;
+   logic        s1_axi_bvalid;
+   logic        s1_axi_bready;
+   logic [31:0] s1_axi_araddr;
+   logic [ 7:0] s1_axi_arlen;
+   logic [ 2:0] s1_axi_arsize;
+   logic [ 1:0] s1_axi_arburst;
+   logic        s1_axi_arvalid;
+   logic        s1_axi_arready;
+   logic [63:0] s1_axi_rdata;
+   logic [1:0]  s1_axi_rresp;
+   logic        s1_axi_rlast;
+   logic        s1_axi_rvalid;
+   logic        s1_axi_rready;
 
    cl_axil_to_axi bud_bridge(
      /* Master Interface (AXI-L) */
@@ -429,43 +522,215 @@ sh_ddr #(.DDR_A_PRESENT(0),
      .rstb_busy         ( rstb_busy       ),
    
      // Write address
-     .s_axi_awid        ( s_axi_awid      ), 
-     .s_axi_awaddr      ( s_axi_awaddr    ),
-     .s_axi_awlen       ( s_axi_awlen     ),
-     .s_axi_awsize      ( s_axi_awsize    ),
-     .s_axi_awburst     ( s_axi_awburst   ),
-     .s_axi_awvalid     ( s_axi_awvalid   ),
-     .s_axi_awready     ( s_axi_awready   ),
+     .m_axi_awid        ( m0_axi_awid      ), 
+     .m_axi_awaddr      ( m0_axi_awaddr    ),
+     .m_axi_awlen       ( m0_axi_awlen     ),
+     .m_axi_awsize      ( m0_axi_awsize    ),
+     .m_axi_awburst     ( m0_axi_awburst   ),
+     .m_axi_awvalid     ( m0_axi_awvalid   ),
+     .m_axi_awready     ( m0_axi_awready   ),
    
      // Write data
-     .s_axi_wdata       ( s_axi_wdata     ),
-     .s_axi_wstrb       ( s_axi_wstrb     ),
-     .s_axi_wlast       ( s_axi_wlast     ),  
-     .s_axi_wvalid      ( s_axi_wvalid    ),
-     .s_axi_wready      ( s_axi_wready    ),
+     .m_axi_wdata       ( m0_axi_wdata     ),
+     .m_axi_wstrb       ( m0_axi_wstrb     ),
+     .m_axi_wlast       ( m0_axi_wlast     ),  
+     .m_axi_wvalid      ( m0_axi_wvalid    ),
+     .m_axi_wready      ( m0_axi_wready    ),
    
      // Write response
-     .s_axi_bid         ( s_axi_bid       ),
-     .s_axi_bresp       ( s_axi_bresp     ),
-     .s_axi_bvalid      ( s_axi_bvalid    ),
-     .s_axi_bready      ( s_axi_bready    ),
+     .m_axi_bid         ( m0_axi_bid       ),
+     .m_axi_bresp       ( m0_axi_bresp     ),
+     .m_axi_bvalid      ( m0_axi_bvalid    ),
+     .m_axi_bready      ( m0_axi_bready    ),
    
      // Read address
-     .s_axi_arid        ( s_axi_arid      ), 
-     .s_axi_araddr      ( s_axi_araddr    ),
-     .s_axi_arlen       ( s_axi_arlen     ),
-     .s_axi_arsize      ( s_axi_arsize    ),
-     .s_axi_arburst     ( s_axi_arburst   ),
-     .s_axi_arvalid     ( s_axi_arvalid   ),
-     .s_axi_arready     ( s_axi_arready   ),
+     .m_axi_arid        ( m0_axi_arid      ), 
+     .m_axi_araddr      ( m0_axi_araddr    ),
+     .m_axi_arlen       ( m0_axi_arlen     ),
+     .m_axi_arsize      ( m0_axi_arsize    ),
+     .m_axi_arburst     ( m0_axi_arburst   ),
+     .m_axi_arvalid     ( m0_axi_arvalid   ),
+     .m_axi_arready     ( m0_axi_arready   ),
    
      // Read data/response
-     .s_axi_rid         ( s_axi_rid       ),
-     .s_axi_rdata       ( s_axi_rdata     ),
-     .s_axi_rresp       ( s_axi_rresp     ),
-     .s_axi_rlast       ( s_axi_rlast     ),
-     .s_axi_rvalid      ( s_axi_rvalid    ),
-     .s_axi_rready      ( s_axi_rready    )
+     .m_axi_rid         ( m0_axi_rid       ),
+     .m_axi_rdata       ( m0_axi_rdata     ),
+     .m_axi_rresp       ( m0_axi_rresp     ),
+     .m_axi_rlast       ( m0_axi_rlast     ),
+     .m_axi_rvalid      ( m0_axi_rvalid    ),
+     .m_axi_rready      ( m0_axi_rready    )
+   );
+
+   axi_crossbar_0 crossbar(
+     .aclk(clk),
+     .aresetn(sync_rst_n),
+     .s_axi_awid    ({ s1_axi_awid   , s0_axi_awid    }),
+     .s_axi_awaddr  ({ s1_axi_awaddr , s0_axi_awaddr  }),
+     .s_axi_awlen   ({ s1_axi_awlen  , s0_axi_awlen   }),
+     .s_axi_awsize  ({ s1_axi_awsize , s0_axi_awsize  }),
+     .s_axi_awburst ({ s1_axi_awburst, s0_axi_awburst }),
+     .s_axi_awlock  ('0),
+     .s_axi_awcache ('0),
+     .s_axi_awprot  ('0),
+     .s_axi_awqos   ('0),
+     .s_axi_awvalid ({ s1_axi_awvalid, s0_axi_awvalid }),
+     .s_axi_awready ({ s1_axi_awready, s0_axi_awready }),
+     .s_axi_wdata   ({ s1_axi_wdata  , s0_axi_wdata   }),
+     .s_axi_wstrb   ({ s1_axi_wstrb  , s0_axi_wstrb   }),
+     .s_axi_wlast   ({ s1_axi_wlast  , s0_axi_wlast   }),
+     .s_axi_wvalid  ({ s1_axi_wvalid , s0_axi_wvalid  }),
+     .s_axi_wready  ({ s1_axi_wready , s0_axi_wready  }),
+     .s_axi_bid     ({ s1_axi_bid    , s0_axi_bid     }),
+     .s_axi_bresp   ({ s1_axi_bresp  , s0_axi_bresp   }),
+     .s_axi_bvalid  ({ s1_axi_bvalid , s0_axi_bvalid  }),
+     .s_axi_bready  ({ s1_axi_bready , s0_axi_bready  }),
+     .s_axi_arid    ({ s1_axi_arid   , s0_axi_arid    }),
+     .s_axi_araddr  ({ s1_axi_araddr , s0_axi_araddr  }),
+     .s_axi_arlen   ({ s1_axi_arlen  , s0_axi_arlen   }),
+     .s_axi_arsize  ({ s1_axi_arsize , s0_axi_arsize  }),
+     .s_axi_arburst ({ s1_axi_arburst, s0_axi_arburst }),
+     .s_axi_arlock  ('0),
+     .s_axi_arcache ('0),
+     .s_axi_arprot  ('0),
+     .s_axi_arqos   ('0),
+     .s_axi_arvalid ({ s1_axi_arvalid, s0_axi_arvalid }),
+     .s_axi_arready ({ s1_axi_arready, s0_axi_arready }),
+     .s_axi_rid     ({ s1_axi_rid    , s0_axi_rid     }),
+     .s_axi_rdata   ({ s1_axi_rdata  , s0_axi_rdata   }),
+     .s_axi_rresp   ({ s1_axi_rresp  , s0_axi_rresp   }),
+     .s_axi_rlast   ({ s1_axi_rlast  , s0_axi_rlast   }),
+     .s_axi_rvalid  ({ s1_axi_rvalid , s0_axi_rvalid  }),
+     .s_axi_rready  ({ s1_axi_rready , s0_axi_rready  }),
+
+     .m_axi_awid    ({ m1_axi_awid   , m0_axi_awid    }),
+     .m_axi_awaddr  ({ m1_axi_awaddr , m0_axi_awaddr  }),
+     .m_axi_awlen   ({ m1_axi_awlen  , m0_axi_awlen   }),
+     .m_axi_awsize  ({ m1_axi_awsize , m0_axi_awsize  }),
+     .m_axi_awburst ({ m1_axi_awburst, m0_axi_awburst }),
+     .m_axi_awlock  ('0),
+     .m_axi_awcache ('0),
+     .m_axi_awprot  ('0),
+     .m_axi_awregion('0),
+     .m_axi_awqos   ('0),
+     .m_axi_awvalid ({ m1_axi_awvalid, m0_axi_awvalid }),
+     .m_axi_awready ({ m1_axi_awready, m0_axi_awready }),
+     .m_axi_wdata   ({ m1_axi_wdata  , m0_axi_wdata   }),
+     .m_axi_wstrb   ({ m1_axi_wstrb  , m0_axi_wstrb   }),
+     .m_axi_wlast   ({ m1_axi_wlast  , m0_axi_wlast   }),
+     .m_axi_wvalid  ({ m1_axi_wvalid , m0_axi_wvalid  }),
+     .m_axi_wready  ({ m1_axi_wready , m0_axi_wready  }),
+     .m_axi_bid     ({ m1_axi_bid    , m0_axi_bid     }),
+     .m_axi_bresp   ({ m1_axi_bresp  , m0_axi_bresp   }),
+     .m_axi_bvalid  ({ m1_axi_bvalid , m0_axi_bvalid  }),
+     .m_axi_bready  ({ m1_axi_bready , m0_axi_bready  }),
+     .m_axi_arid    ({ m1_axi_arid   , m0_axi_arid    }),
+     .m_axi_araddr  ({ m1_axi_araddr , m0_axi_araddr  }),
+     .m_axi_arlen   ({ m1_axi_arlen  , m0_axi_arlen   }),
+     .m_axi_arsize  ({ m1_axi_arsize , m0_axi_arsize  }),
+     .m_axi_arburst ({ m1_axi_arburst, m0_axi_arburst }),
+     .m_axi_arlock  ('0),
+     .m_axi_arcache ('0),
+     .m_axi_arprot  ('0),
+     .m_axi_arregion('0),
+     .m_axi_arqos   ('0),
+     .m_axi_arvalid ({ m1_axi_arvalid, m0_axi_arvalid }),
+     .m_axi_arready ({ m1_axi_arready, m0_axi_arready }),
+     .m_axi_rid     ({ m1_axi_rid    , m0_axi_rid     }),
+     .m_axi_rdata   ({ m1_axi_rdata  , m0_axi_rdata   }),
+     .m_axi_rresp   ({ m1_axi_rresp  , m0_axi_rresp   }),
+     .m_axi_rlast   ({ m1_axi_rlast  , m0_axi_rlast   }),
+     .m_axi_rvalid  ({ m1_axi_rvalid , m0_axi_rvalid  }),
+     .m_axi_rready  ({ m1_axi_rready , m0_axi_rready  })
+   );
+
+   axi_vip_master dut_master (
+      .aclk          ( clk         ),
+      .aresetn       ( sync_rst_n  ),
+      .m_axi_awaddr  (m1_axi_awaddr),
+      .m_axi_awlen   (m1_axi_awlen),
+      .m_axi_awsize  (m1_axi_awsize),
+      .m_axi_awburst (m1_axi_awburst),
+      .m_axi_awlock  ('0),
+      .m_axi_awcache ('0),
+      .m_axi_awprot  ('0),
+      .m_axi_awregion('0),
+      .m_axi_awqos   ('0),
+      .m_axi_awuser  ('0),
+      .m_axi_awvalid (m1_axi_awvalid),
+      .m_axi_awready (m1_axi_awready),
+      .m_axi_wdata   (m1_axi_wdata),
+      .m_axi_wstrb   (m1_axi_wstrb),
+      .m_axi_wlast   (m1_axi_wlast),
+      .m_axi_wuser   ('0),
+      .m_axi_wvalid  (m1_axi_wvalid),
+      .m_axi_wready  (m1_axi_wready),
+      .m_axi_bresp   (m1_axi_bresp),
+      .m_axi_buser   ('0),
+      .m_axi_bvalid  (m1_axi_bvalid),
+      .m_axi_bready  (m1_axi_bready),
+      .m_axi_araddr  (m1_axi_araddr),
+      .m_axi_arlen   (m1_axi_arlen),
+      .m_axi_arsize  (m1_axi_arsize),
+      .m_axi_arburst (m1_axi_arburst),
+      .m_axi_arlock  ('0),
+      .m_axi_arcache ('0),
+      .m_axi_arprot  ('0),
+      .m_axi_arregion('0),
+      .m_axi_arqos   ('0),
+      .m_axi_aruser  ('0),
+      .m_axi_arvalid (m1_axi_arvalid),
+      .m_axi_arready (m1_axi_arready),
+      .m_axi_rdata   (m1_axi_rdata),
+      .m_axi_rresp   (m1_axi_rresp),
+      .m_axi_rlast   (m1_axi_rlast),
+      .m_axi_ruser   ('0),
+      .m_axi_rvalid  (m1_axi_rvalid),
+      .m_axi_rready  (m1_axi_rready)
+   );
+
+   axi_vip_slave dut_slave (
+      .aclk          ( clk         ),
+      .aresetn       ( sync_rst_n  ),
+      .s_axi_awaddr  (s1_axi_awaddr),
+      .s_axi_awlen   (s1_axi_awlen),
+      .s_axi_awsize  (s1_axi_awsize),
+      .s_axi_awburst (s1_axi_awburst),
+      .s_axi_awlock  ('0),
+      .s_axi_awcache ('0),
+      .s_axi_awprot  ('0),
+      .s_axi_awregion('0),
+      .s_axi_awqos   ('0),
+      .s_axi_awuser  ('0),
+      .s_axi_awvalid (s1_axi_awvalid),
+      .s_axi_awready (s1_axi_awready),
+      .s_axi_wdata   (s1_axi_wdata),
+      .s_axi_wstrb   (s1_axi_wstrb),
+      .s_axi_wlast   (s1_axi_wlast),
+      .s_axi_wuser   ('0),
+      .s_axi_wvalid  (s1_axi_wvalid),
+      .s_axi_wready  (s1_axi_wready),
+      .s_axi_bresp   (s1_axi_bresp),
+      .s_axi_buser   ('0),
+      .s_axi_bvalid  (s1_axi_bvalid),
+      .s_axi_bready  (s1_axi_bready),
+      .s_axi_araddr  (s1_axi_araddr),
+      .s_axi_arlen   (s1_axi_arlen),
+      .s_axi_arsize  (s1_axi_arsize),
+      .s_axi_arburst (s1_axi_arburst),
+      .s_axi_arlock  ('0),
+      .s_axi_arcache ('0),
+      .s_axi_arprot  ('0),
+      .s_axi_arregion('0),
+      .s_axi_arqos   ('0),
+      .s_axi_aruser  ('0),
+      .s_axi_arvalid (s1_axi_arvalid),
+      .s_axi_arready (s1_axi_arready),
+      .s_axi_rdata   (s1_axi_rdata),
+      .s_axi_rresp   (s1_axi_rresp),
+      .s_axi_rlast   (s1_axi_rlast),
+      .s_axi_ruser   ('0),
+      .s_axi_rvalid  (s1_axi_rvalid),
+      .s_axi_rready  (s1_axi_rready)
    );
    
    blk_mem_gen_0 SMEM (
@@ -476,43 +741,43 @@ sh_ddr #(.DDR_A_PRESENT(0),
      .s_aresetn         ( sync_rst_n      ),
    
      // Write address
-     .s_axi_awid        ( s_axi_awid      ), 
-     .s_axi_awaddr      ( s_axi_awaddr    ),
-     .s_axi_awlen       ( s_axi_awlen     ),
-     .s_axi_awsize      ( s_axi_awsize    ),
-     .s_axi_awburst     ( s_axi_awburst   ),
-     .s_axi_awvalid     ( s_axi_awvalid   ),
-     .s_axi_awready     ( s_axi_awready   ),
+     .s_axi_awid        ( s0_axi_awid      ), 
+     .s_axi_awaddr      ( s0_axi_awaddr    ),
+     .s_axi_awlen       ( s0_axi_awlen     ),
+     .s_axi_awsize      ( s0_axi_awsize    ),
+     .s_axi_awburst     ( s0_axi_awburst   ),
+     .s_axi_awvalid     ( s0_axi_awvalid   ),
+     .s_axi_awready     ( s0_axi_awready   ),
    
      // Write data
-     .s_axi_wdata       ( s_axi_wdata     ),
-     .s_axi_wstrb       ( s_axi_wstrb     ),
-     .s_axi_wlast       ( s_axi_wlast     ),  
-     .s_axi_wvalid      ( s_axi_wvalid    ),
-     .s_axi_wready      ( s_axi_wready    ),
+     .s_axi_wdata       ( s0_axi_wdata     ),
+     .s_axi_wstrb       ( s0_axi_wstrb     ),
+     .s_axi_wlast       ( s0_axi_wlast     ),  
+     .s_axi_wvalid      ( s0_axi_wvalid    ),
+     .s_axi_wready      ( s0_axi_wready    ),
    
      // Write response
-     .s_axi_bid         ( s_axi_bid       ),
-     .s_axi_bresp       ( s_axi_bresp     ),
-     .s_axi_bvalid      ( s_axi_bvalid    ),
-     .s_axi_bready      ( s_axi_bready    ),
+     .s_axi_bid         ( s0_axi_bid       ),
+     .s_axi_bresp       ( s0_axi_bresp     ),
+     .s_axi_bvalid      ( s0_axi_bvalid    ),
+     .s_axi_bready      ( s0_axi_bready    ),
    
      // Read address
-     .s_axi_arid        ( s_axi_arid      ), 
-     .s_axi_araddr      ( s_axi_araddr    ),
-     .s_axi_arlen       ( s_axi_arlen     ),
-     .s_axi_arsize      ( s_axi_arsize    ),
-     .s_axi_arburst     ( s_axi_arburst   ),
-     .s_axi_arvalid     ( s_axi_arvalid   ),
-     .s_axi_arready     ( s_axi_arready   ),
+     .s_axi_arid        ( s0_axi_arid      ), 
+     .s_axi_araddr      ( s0_axi_araddr    ),
+     .s_axi_arlen       ( s0_axi_arlen     ),
+     .s_axi_arsize      ( s0_axi_arsize    ),
+     .s_axi_arburst     ( s0_axi_arburst   ),
+     .s_axi_arvalid     ( s0_axi_arvalid   ),
+     .s_axi_arready     ( s0_axi_arready   ),
    
      // Read data/response
-     .s_axi_rid         ( s_axi_rid       ),
-     .s_axi_rdata       ( s_axi_rdata     ),
-     .s_axi_rresp       ( s_axi_rresp     ),
-     .s_axi_rlast       ( s_axi_rlast     ),
-     .s_axi_rvalid      ( s_axi_rvalid    ),
-     .s_axi_rready      ( s_axi_rready    )
+     .s_axi_rid         ( s0_axi_rid       ),
+     .s_axi_rdata       ( s0_axi_rdata     ),
+     .s_axi_rresp       ( s0_axi_rresp     ),
+     .s_axi_rlast       ( s0_axi_rlast     ),
+     .s_axi_rvalid      ( s0_axi_rvalid    ),
+     .s_axi_rready      ( s0_axi_rready    )
    );
 
 endmodule
