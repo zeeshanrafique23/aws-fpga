@@ -116,8 +116,8 @@ module cl_axil_to_axi(
       {un_used_rdata, m_bar1_sh_rdata} = s_axi_rdata;
       m_bar1_sh_rresp                  = s_axi_rresp;
       un_used_rlast                    = s_axi_rlast;
+      m_bar1_sh_rvalid                 = s_axi_rvalid;
       s_axi_rready                     = m_sh_bar1_rready;
-      m_sh_bar1_rready                 = s_axi_rready;
     end
   end
 

@@ -32,14 +32,14 @@ module cl_bud #(parameter NUM_PCIE=1, parameter NUM_DDR=4, parameter NUM_HMC=4, 
    // to avoid cases where developer may forget to
    // remove it from the end of the file
 
-   `include "unused_flr_template.inc"
-   `include "unused_ddr_a_b_d_template.inc"
-   `include "unused_ddr_c_template.inc"
-   `include "unused_pcim_template.inc"
-   `include "unused_dma_pcis_template.inc"
-   `include "unused_cl_sda_template.inc"
-   `include "unused_apppf_irq_template.inc"
-   `include "unused_sh_ocl_template.inc"
+//   `include "unused_flr_template.inc"
+//   `include "unused_ddr_a_b_d_template.inc"
+//   `include "unused_ddr_c_template.inc"
+//   `include "unused_pcim_template.inc"
+//   `include "unused_dma_pcis_template.inc"
+//   `include "unused_cl_sda_template.inc"
+//   `include "unused_apppf_irq_template.inc"
+//   `include "unused_sh_ocl_template.inc"
 
    localparam NUM_CFG_STGS_INT_TST = 4;
    localparam NUM_CFG_STGS_HMC_ATG = 4;
@@ -86,7 +86,7 @@ always_ff @(negedge rst_main_n or posedge clk)
 // related to DDR pin constraints.
 
 // Only the DDR pins are connected. The AXI and stats interfaces are tied-off.
-
+/*
 sh_ddr #(.DDR_A_PRESENT(0),
          .DDR_B_PRESENT(0),
          .DDR_D_PRESENT(0)) SH_DDR
@@ -348,7 +348,7 @@ sh_ddr #(.DDR_A_PRESENT(0),
    assign aurora_sh_stat_ack   =  1'b0;
    assign aurora_sh_stat_rdata = 32'b0;
    assign aurora_sh_stat_int   =  8'b0;
-
+*/
 //------------------------------------
 // CL BUD logic
 //------------------------------------
@@ -516,8 +516,3 @@ sh_ddr #(.DDR_A_PRESENT(0),
    );
 
 endmodule
-
-
-
-
-
