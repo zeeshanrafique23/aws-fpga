@@ -1,6 +1,7 @@
 # Table of Contents
 
 1. [Overview of AWS EC2 FPGA Development Kit](#overview-of-aws-ec2-fpga-development-kit)
+    - [Developer Support](#developer-support)
     - [Development Flow](#development-flow)
     - [Development environments](#development-environments)
     - [FPGA Developer AMI](#fpga-developer-ami)
@@ -14,7 +15,6 @@
     - [Quickstarts](#quickstarts)
     - [How To's](#how-tos)
 1. [Documentation Overview](#documentation-overview)
-1. [Developer Support](#developer-support)
 
 # Overview of AWS EC2 FPGA Development Kit
 
@@ -23,6 +23,10 @@ It is distributed between this github repository and FPGA Developer AMI - [Cento
 
 ⚠️ <b>NOTE:</b> The developer kit is supported for Linux operating systems only.
 
+## Developer Support
+
+Opening a [GitHub Issue](https://github.com/aws/aws-fpga/issues) is the preferred method to get support with the AWS FPGA Development Kit. In addition, the [FPGA Development re:Post Tag](https://repost.aws/tags/TAc7ofO5tbQRO57aX1lBYbjA/fpga-development) is available to find FPGA-related discussion topics from the AWS community of customers, AWS customer support, and the AWS FPGA development team.
+
 ## Development Flow
 After creating an FPGA design (also called CL - Custom logic), developers can create an Amazon FPGA Image (AFI) and easily deploy it to an F1 instance. AFIs are reusable, shareable and can be deployed in a scalable and secure way.
 
@@ -30,12 +34,13 @@ After creating an FPGA design (also called CL - Custom logic), developers can cr
 
 ## Development Environments
 
-| Development Environment | Description | Accelerator Language | Hardware Interface | Debug Options| Typical Developer |
-| --------|---------|-------|---------|-------|-------|
-| Software Defined Accelerator Development using [Vitis](Vitis/README.md)/[SDAccel](SDAccel/README.md)| Development experience leverages an optimized compiler to allow easy new accelerator development or migration of existing C/C++/openCL, Verilog/VHDL to AWS FPGA instances | C/C++/OpenCL, Verilog/VHDL (RTL) | OpenCL APIs and XRT | SW/HW Emulation, Simulation, GDB, Virtual JTAG (Chipscope) | SW or HW Developer with zero FPGA experience |
-| [Hardware Accelerator Development using Vivado](hdk/README.md) | Fully custom hardware development experience provides hardware developers with the tools required for developing AFIs for AWS FPGA instances  | Verilog/VHDL | [XDMA Driver](sdk/linux_kernel_drivers/xdma/README.md), [peek/poke](sdk/userspace/README.md) | Simulation, Virtual JTAG | HW Developer with advanced FPGA experience |
-| [IP Integrator/High Level Design(HLx) using Vivado](hdk/docs/IPI_GUI_Vivado_Setup.md) | Graphical interface development experience for integrating IP and high level synthesis development | Verilog/VHDL/C | [XDMA Driver](sdk/linux_kernel_drivers/xdma/README.md), [peek/poke](sdk/userspace/README.md) | Simulation, Virtual JTAG | HW Developer with intermediate FPGA experience |
-
+| Development Environment | Description | Accelerator Language | Hardware Interface | Debug Options| Typical Developer                                                     |
+| --------|---------|-------|---------|-------|-----------------------------------------------------------------------|
+| Software Defined Accelerator Development using [Vitis](Vitis/README.md)/[SDAccel](SDAccel/README.md)| Development experience leverages an optimized compiler to allow easy new accelerator development or migration of existing C/C++/openCL, Verilog/VHDL to AWS FPGA instances | C/C++/OpenCL, Verilog/VHDL (RTL) | OpenCL APIs and XRT | SW/HW Emulation, Simulation, GDB, Virtual JTAG (Chipscope) | SW or HW Developer with zero FPGA experience                          |
+| [Hardware Accelerator Development using Vivado](hdk/README.md) | Fully custom hardware development experience provides hardware developers with the tools required for developing AFIs for AWS FPGA instances  | Verilog/VHDL | [XDMA Driver](sdk/linux_kernel_drivers/xdma/README.md), [peek/poke](sdk/userspace/README.md) | Simulation, Virtual JTAG | HW Developer with advanced FPGA experience                            |
+| [IP Integrator/High Level Design(HLx) using Vivado](hdk/docs/IPI_GUI_Vivado_Setup.md) | Graphical interface development experience for integrating IP and high level synthesis development | Verilog/VHDL/C | [XDMA Driver](sdk/linux_kernel_drivers/xdma/README.md), [peek/poke](sdk/userspace/README.md) | Simulation, Virtual JTAG | HW Developer with intermediate FPGA experience                        |
+ | [On-premise development for Alveo U200 using Vitis targetted for migration to F1](Vitis/docs/Alveo_to_AWS_F1_Migration.md) | Vitis flow development using on-premise U200 platform targeted for migration to F1 |  C/C++/OpenCL, Verilog/VHDL (RTL) | OpenCL APIs and XRT | SW/HW Emulation, Simulation, GDB, JTAG (Chipscope) | SW or HW Developer with zero FPGA experience and on-premise U200 card |
+ | [On-premise development for Alveo U200 using F1.A.1.4 shell](hdk/docs/U200_to_F1_migration_HDK.md) | HDK flow for on-premise U200 card using F1.A.1.4 shell targetted for migration to F1 | Verilog/VHDL | XDMA driver, peek/poke | Simulation, JTAG | HW Developer with advanced FPGA experience and on-premise U200 card   |
 > For on-premise development, SDAccel/Vitis/Vivado must have the [correct license and use one of the supported tool versions](./docs/on_premise_licensing_help.md). 
 
 ## FPGA Developer AMI
@@ -50,16 +55,17 @@ AWS marketplace offers multiple versions of the FPGA Developer AMI. The followin
 
 ## Xilinx tool support
 
-| Developer Kit Version | Tool Version Supported | Compatible FPGA Developer AMI Version |
-|-----------|-----------|------|
-| 1.4.21+ | 2021.1 | v1.11.X (Xilinx Vivado/Vitis 2021.1) |
-| 1.4.18+ | 2020.2 | v1.10.X (Xilinx Vivado/Vitis 2020.2) |
-| 1.4.16+ | 2020.1 | v1.9.0-v1.9.X (Xilinx Vivado/Vitis 2020.1) |
-| 1.4.13+ | 2019.2 | v1.8.0-v1.8.X (Xilinx Vivado/Vitis 2019.2) |
-| 1.4.11+ | 2019.1 | v1.7.0-v1.7.X (Xilinx Vivado/SDx 2019.1) |
-| 1.4.8 - 1.4.15b | 2018.3 | v1.6.0-v1.6.X (Xilinx Vivado/SDx 2018.3) |
-| 1.4.3 - 1.4.15b | 2018.2 | v1.5.0-v1.5.X (Xilinx Vivado/SDx 2018.2) |
-|⚠️ 1.3.7 - 1.4.15b | 2017.4 | v1.4.0-v1.4.X (Xilinx Vivado/SDx 2017.4) ⚠️|
+| Developer Kit Version | Tool Version Supported | Compatible FPGA Developer AMI Version       |
+|-----------------------|------------------------|---------------------------------------------|
+| 1.4.23+               | 2021.2                 | v1.12.X (Xilinx Vivado/Vitis 2021.2)        |
+| 1.4.21+               | 2021.1                 | v1.11.X (Xilinx Vivado/Vitis 2021.1)        |
+| 1.4.18+               | 2020.2                 | v1.10.X (Xilinx Vivado/Vitis 2020.2)        |
+| 1.4.16+               | 2020.1                 | v1.9.0-v1.9.X (Xilinx Vivado/Vitis 2020.1)  |
+| 1.4.13+               | 2019.2                 | v1.8.0-v1.8.X (Xilinx Vivado/Vitis 2019.2)  |
+| 1.4.11+               | 2019.1                 | v1.7.0-v1.7.X (Xilinx Vivado/SDx 2019.1)    |
+| 1.4.8 - 1.4.15b       | 2018.3                 | v1.6.0-v1.6.X (Xilinx Vivado/SDx 2018.3)    |
+| 1.4.3 - 1.4.15b       | 2018.2                 | v1.5.0-v1.5.X (Xilinx Vivado/SDx 2018.2)    |
+| ⚠️ 1.3.7 - 1.4.15b    | 2017.4                 | v1.4.0-v1.4.X (Xilinx Vivado/SDx 2017.4) ⚠️ |
 
 ⚠️ Developer kit release v1.4.16 will remove support for Xilinx 2017.4, 2018.2, 2018.3 toolsets. While developer kit release v1.4.16 onwards will not support older Xilinx tools, you can still use them using HDK releases v1.4.15b or earlier. 
 Please check out [the latest v1.4.15b release tag from Github](https://github.com/aws/aws-fpga/releases/tag/v1.4.15b) to use Xilinx 2017.4, 2018.2, 2018.3 toolsets.
@@ -71,10 +77,11 @@ For software-defined development please look at the runtime compatibility table 
 
 ### End of life Announcements
 
-| Xilinx Tool version | State | Statement | 
-|-----------|-----------|------|
-| 2017.1 | 🚫 Deprecated on 09/01/2018 | Developer kit versions prior to v1.3.7 and Developer AMI prior to v1.4 (2017.1) [reached end-of-life](https://forums.aws.amazon.com/ann.jspa?annID=6068). |
-| 2017.4 | ⚠️ Upcoming deprecation on 12/31/2021 | Support for Xilinx 2017.4 toolsets will be deprecated on 12/31/2021. Please check our [forum announcement for more details](https://forums.aws.amazon.com/ann.jspa?annID=8949). |
+| Xilinx Tool version | State | Statement                                                                                                                                                                 | 
+|-----------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 2017.1 | 🚫 Deprecated on 09/01/2018 | Developer kit versions prior to v1.3.7 and Developer AMI prior to v1.4 (2017.1) [reached end-of-life](https://forums.aws.amazon.com/ann.jspa?annID=6068).                 |
+| 2017.4 | 🚫 Deprecated on 12/31/2021 | [Support for Xilinx 2017.4 toolsets was deprecated on 12/31/2021](https://forums.aws.amazon.com/ann.jspa?annID=8949). |
+| 2020.1 and below | Discontinued on 02/2022 | Removed the ability for customers to newly subscribe to 2020.1 and below AMI versions to remove exposure to [CVE-2021-44228](https://www.cve.org/CVERecord?id=CVE-2021-44228) as these versions of tools do not have patches from xilinx |
 
 ## Hardware Development Kit (HDK)
 
@@ -123,7 +130,7 @@ The [SDK directory](./sdk/README.md) includes the runtime environment required t
 * 1-8 Xilinx UltraScale+ VU9P based FPGA slots
 * Per FPGA Slot, Interfaces available for Custom Logic(CL):
     * One x16 PCIe Gen 3 Interface
-    * Four DDR4 RDIMM interfaces (with ECC)
+    * Four DDR4 RDIMM interfaces (72-bit with ECC, 16 GiB each; 64 GiB total)
     * AXI4 protocol support on all interfaces
 * User-defined clock frequency driving all CL to Shell interfaces
 * Multiple free running auxiliary clocks
@@ -183,10 +190,10 @@ Before you create your own AWS FPGA design, we recommend that you go through one
 ℹ️ <b>INFO:</b> For more in-depth applications and examples of using High level synthesis, Vitis Libraries, App Notes and Workshops, please refer to our [Example List](./docs/examples/example_list.md)
 
 ### How Tos
-| How To | Description | 
-|----|----|
-| [Migrate Alveo U200 designs to F1](./Vitis/docs/Alveo_to_AWS_F1_Migration.md) | This application note shows the ease of migrating an Alveo U200 design to F1. | 
-
+| How To                                                                                | Description                                                                            | 
+|---------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| [Migrate Alveo U200 designs to F1 - Vitis](./Vitis/docs/Alveo_to_AWS_F1_Migration.md) | This application note shows the ease of migrating an Alveo U200 design to F1.          | 
+ | [Migrate Alveo U200 designs to F1 - HDK](./hdk/docs/U200_to_F1_migration_HDK.md)      | Path to migrate from U200 vivado design flow to F1 HDK flow using AWS provided shells. |                                                                 
 # Documentation Overview
 
 Documentation is located throughout this developer kit and the table below consolidates a list of key documents to help developers find information:
@@ -214,13 +221,6 @@ Documentation is located throughout this developer kit and the table below conso
 | AFI - Creation Error Codes | [create\_fpga\_image\_error\_codes](hdk/docs/create_fpga_image_error_codes.md) | CLI documentation for managing AFIs |
 | AFI - Power | [FPGA Power, recovering from clock gating](./hdk/docs/afi_power.md) | Helps developers with understanding FPGA power usage, preventing power violations on the F1 instance and recovering from a clock gated slot. |
 | On-premise Development | [Tools, Licenses required for on-premise development](./docs/on_premise_licensing_help.md) | Guidance for developer wanting to develop AFIs from on-premises instead of using the [FPGA Developer AMI](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) |
+| PCIe Peer-2-Peer     | [P2P](https://github.com/awslabs/aws-fpga-app-notes/blob/master/Using-PCIe-Peer2Peer/README.md) | Guidance on using PCIe P2P |
+| PCIe write combining | [PCIe write combine](https://github.com/awslabs/aws-fpga-app-notes/blob/master/Using-PCIe-Write-Combining/README.md) | Documentation on PCIe write combining for performance improvement |
 | Frequently asked questions | [FAQ](./FAQs.md)| Q/A are added based on developer feedback and common AWS forum questions  |
-
-
-# Developer Support
-
-* The [**Amazon FPGA Development User Forum**](https://forums.aws.amazon.com/forum.jspa?forumID=243&start=0) is the first place to go to post questions, learn from other users and read announcements.
-    * We recommend joining the [AWS forums](https://forums.aws.amazon.com/forum.jspa?forumID=243) to engage with the FPGA developer community, AWS and Xilinx engineers to get help.
-
-* You could also file a [Github Issue](https://github.com/aws/aws-fpga/issues) for support. We prefer the forums as this helps the entire community learn from issues, feedback and answers.
-    * Click the "Watch" button in GitHub upper right corner to get regular updates.
